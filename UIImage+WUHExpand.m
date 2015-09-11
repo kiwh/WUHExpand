@@ -6,7 +6,7 @@
 //  Copyright (c) 2015年 DJSoft. All rights reserved.
 //
 
-#import "UIImage+CommonExpand.h"
+#import "UIImage+WUHExpand.h"
 #import <CoreGraphics/CoreGraphics.h>
 #import <Accelerate/Accelerate.h>
 

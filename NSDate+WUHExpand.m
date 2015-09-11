@@ -6,7 +6,7 @@
 //  Copyright (c) 2015年 wuhao. All rights reserved.
 //
 
-#import "NSDate+Expand.h"
+#import "NSDate+WUHExpand.h"
 
 @implementation NSDate(Common)
 
