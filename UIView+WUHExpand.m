@@ -91,11 +91,20 @@
 
 @implementation UIView(subView)
 
--(void)removeAllSubViews
+-(void)RemoveAllSubViews
 {
-    for (UIView * subView in self.subviews) {
-        [subView removeFromSuperview];
-    }
+    [self.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+}
+
+-(UIView *)GetSubViewByTag:(NSInteger)tag
+{
+    __block UIView * subView;
+    [self.subviews enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        if ([[obj valueForKey:@"tag"] integerValue] == tag) {
+            subView = obj;
+        }
+    }];
+    return subView;
 }
 
 @end

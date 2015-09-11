@@ -27,7 +27,6 @@
     }
     UIImage *iconImage = [UIImage imageNamed:icon];
     return [self mergeImageWith:highImage icon:iconImage iconSize:iconSize];
-    
 }
 
 /**
@@ -74,9 +73,6 @@
     return resultImage;
 }
 
-
-
-
 @end
 
 @implementation UIImage(Blur)
@@ -93,18 +89,15 @@
     UIColor *tintColor = [UIColor colorWithWhite:1.0 alpha:alpha];
     return [self imgBluredWithRadius:radius tintColor:tintColor saturationDeltaFactor:colorSaturationFactor maskImage:nil];
 }
-// 2.封装好,供外界调用的
+
 - (UIImage *)imgWithBlur
 {
-    // 调用方法1
     return [self imgWithLightAlpha:0.1 radius:3 colorSaturationFactor:1];
 }
 
 // 内部方法,核心代码,封装了毛玻璃效果 参数:半径,颜色,色彩饱和度
 - (UIImage *)imgBluredWithRadius:(CGFloat)blurRadius tintColor:(UIColor *)tintColor saturationDeltaFactor:(CGFloat)saturationDeltaFactor maskImage:(UIImage *)maskImage
 {
-    
-    
     CGRect imageRect = { CGPointZero, self.size };
     UIImage *effectImage = self;
     

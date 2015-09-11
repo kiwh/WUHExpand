@@ -72,10 +72,5 @@
 #define Document_path NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);  //沙箱中文档的path
 #define Cache_path NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);       //沙箱中缓存的path
 
-/** ---------------App Custom define ------- */  //根据app自定义
-#define Color_Main Color_RGB(250,122,50)
-#define Color_Main_Gary Color_RGB(222,222,222)
-
-
 
 #endif

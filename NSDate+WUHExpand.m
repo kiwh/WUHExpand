@@ -13,7 +13,7 @@
 -(NSString *)dateByFormat:(NSString *)format
 {
     NSDateFormatter * df = [[NSDateFormatter alloc] init];
-    [df setDateFormat:format];
+    [df setDateFormat:format?format:@"yyyy-MM-dd hh:mm:ss"];
     return [df stringFromDate:self];
 }
 
@@ -21,32 +21,32 @@
 
 @implementation NSDate(Calendar)
 
--(NSDictionary *)transFormCalendarWithUnit:(NSCalendarUnit)unit
+-(NSDictionary *)GetCalendarInfoWithUnit:(NSCalendarUnit)unit
 {
     NSCalendar *calendar = [NSCalendar currentCalendar];
     NSDateComponents *dateComponent = [calendar components:unit fromDate:self];
     
     NSMutableDictionary * dict = [NSMutableDictionary dictionary];
     if (unit & NSCalendarUnitYear) {
-        [dict setObject:@(dateComponent.year) forKey:@"year"];
+        [dict setObject:@(dateComponent.year) forKey:YEAR];
     }
     if (unit & NSCalendarUnitMonth) {
-        [dict setObject:@(dateComponent.month) forKey:@"month"];
+        [dict setObject:@(dateComponent.month) forKey:MONTH];
     }
     if (unit & NSCalendarUnitDay) {
-        [dict setObject:@(dateComponent.day) forKey:@"day"];
+        [dict setObject:@(dateComponent.day) forKey:DAY];
     }
     if (unit & NSCalendarUnitHour) {
-        [dict setObject:@(dateComponent.hour) forKey:@"hour"];
+        [dict setObject:@(dateComponent.hour) forKey:HOUR];
     }
     if (unit & NSCalendarUnitMinute) {
-        [dict setObject:@(dateComponent.minute) forKey:@"minute"];
+        [dict setObject:@(dateComponent.minute) forKey:MINUTE];
     }
     if (unit & NSCalendarUnitSecond) {
-        [dict setObject:@(dateComponent.second) forKey:@"second"];
+        [dict setObject:@(dateComponent.second) forKey:SECOND];
     }
     if (unit & NSCalendarUnitWeekday) {
-        [dict setObject:@(dateComponent.weekday) forKey:@"weakDay"];
+        [dict setObject:@(dateComponent.weekday) forKey:WEEKDAY];
     }
     return dict;
 }
@@ -56,12 +56,6 @@
     return NSCalendarUnitYear|NSCalendarUnitMonth|NSCalendarUnitDay|NSCalendarUnitHour|NSCalendarUnitMinute|NSCalendarUnitSecond|NSCalendarUnitWeekday;
 }
 
-+(NSNumber *)transFormDateStringToDateFormSince1970:(NSString *)dateString
-{
-    NSDateFormatter * df = [[NSDateFormatter alloc] init];
-    NSDate * date = [df dateFromString:dateString];
-    return @(date.timeIntervalSince1970);
-}
 
 +(NSString*)transformWeakDayNumber:(NSNumber*)weakDayNum
 {
@@ -69,7 +63,7 @@
     return [result objectAtIndex:weakDayNum.integerValue-1];
 }
 
--(NSDictionary*)getChineseCalendarInfo{
+-(NSDictionary*)GetChineseCalendarInfo{
     
     NSArray *chineseYears = [NSArray arrayWithObjects:
                              @"甲子", @"乙丑", @"丙寅", @"丁卯",  @"戊辰",  @"己巳",  @"庚午",  @"辛未",  @"壬申",  @"癸酉",
@@ -90,9 +84,9 @@
                           @"廿一", @"廿二", @"廿三", @"廿四", @"廿五", @"廿六", @"廿七", @"廿八", @"廿九", @"三十",  nil];
     
     
-    NSCalendar *localeCalendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSChineseCalendar];
+    NSCalendar *localeCalendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierChinese];
     
-    unsigned unitFlags = NSYearCalendarUnit | NSMonthCalendarUnit |  NSDayCalendarUnit;
+    unsigned unitFlags = NSCalendarUnitYear | NSCalendarUnitMonth |  NSCalendarUnitDay;
     
     NSDateComponents *localeComp = [localeCalendar components:unitFlags fromDate:self];
     
@@ -101,7 +95,7 @@
     NSString *m_str = [chineseMonths objectAtIndex:localeComp.month-1];
     NSString *d_str = [chineseDays objectAtIndex:localeComp.day-1];
     
-    return @{@"year":y_str,@"month":m_str,@"day":d_str};
+    return @{YEAR:y_str,MONTH:m_str,DAY:d_str};
 }
 
 -(NSDictionary *)getCurrentWeekBeginDayAndEndDayWithFormat:(NSString*)format
@@ -111,11 +105,11 @@
     
     //Week Start Date
     
-    NSCalendar *gregorian = [[NSCalendar alloc]        initWithCalendarIdentifier:NSGregorianCalendar];
+    NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
     
-    NSDateComponents *components = [gregorian components:NSWeekdayCalendarUnit | NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit fromDate:self];
+    NSDateComponents *components = [gregorian components:NSCalendarUnitWeekday | NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay fromDate:self];
     
-    NSInteger dayofweek = [[[NSCalendar currentCalendar] components:NSWeekdayCalendarUnit fromDate:self] weekday];// this will give you current day of week
+    NSInteger dayofweek = [[[NSCalendar currentCalendar] components:NSCalendarUnitWeekday fromDate:self] weekday];// this will give you current day of week
     
     [components setDay:([components day] - ((dayofweek) - 2))];// for beginning of the week.
     
@@ -123,19 +117,19 @@
     NSString * dateString2Prev = [dateFormat stringFromDate:beginningOfWeek];
     //Week End Date
     
-    NSCalendar *gregorianEnd = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+    NSCalendar *gregorianEnd = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
     
-    NSDateComponents *componentsEnd = [gregorianEnd components:NSWeekdayCalendarUnit | NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit fromDate:self];
+    NSDateComponents *componentsEnd = [gregorianEnd components:NSCalendarUnitWeekday | NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay fromDate:self];
     
-    NSInteger Enddayofweek = [[[NSCalendar currentCalendar] components:NSWeekdayCalendarUnit fromDate:self] weekday];// this will give you current day of week
+    NSInteger Enddayofweek = [[[NSCalendar currentCalendar] components:NSCalendarUnitWeekday fromDate:self] weekday];// this will give you current day of week
     
     [componentsEnd setDay:([componentsEnd day]+(7-Enddayofweek)+1)];// for end day of the week
     NSDate *EndOfWeek = [gregorianEnd dateFromComponents:componentsEnd];
     NSString * dateEndPrev = [dateFormat stringFromDate:EndOfWeek];
-    return @{@"beginDate":dateString2Prev,@"endDate":dateEndPrev};
+    return @{BeginDate:dateString2Prev,EndDate:dateEndPrev};
 }
 
--(NSDictionary *)getCurrentMonthBeginDayANdEndDayWithFormat:(NSString *)format
+-(NSDictionary *)getCurrentMonthBeginDayAndEndDayWithFormat:(NSString *)format
 {
         double interval = 0;
         NSDate *beginDate = nil;
@@ -143,7 +137,7 @@
         
         NSCalendar *calendar = [NSCalendar currentCalendar];
         [calendar setFirstWeekday:2];//设定周一为周首日
-        BOOL ok = [calendar rangeOfUnit:NSMonthCalendarUnit startDate:&beginDate interval:&interval forDate:self];
+        BOOL ok = [calendar rangeOfUnit:NSCalendarUnitMonth startDate:&beginDate interval:&interval forDate:self];
         //分别修改为 NSDayCalendarUnit NSWeekCalendarUnit NSYearCalendarUnit
         if (ok) {
             endDate = [beginDate dateByAddingTimeInterval:interval-1];
@@ -154,10 +148,10 @@
         [myDateFormatter setDateFormat:format];
         NSString *beginString = [myDateFormatter stringFromDate:beginDate];
         NSString *endString = [myDateFormatter stringFromDate:endDate];
-    return @{@"beginDate":beginString,@"endDate":endString};
+    return @{BeginDate:beginString,EndDate:endString};
 }
 
--(NSInteger)getMonthOfDays
+-(NSInteger)GetMonthOfDays
 {
     return [[NSCalendar currentCalendar] rangeOfUnit:NSCalendarUnitDay inUnit:NSCalendarUnitMonth forDate:self].length;
 }
@@ -165,14 +159,14 @@
 - (NSDate *)firstDayOfCurrentMonth
 {
     NSDate *startDate = nil;
-    BOOL ok = [[NSCalendar currentCalendar] rangeOfUnit:NSMonthCalendarUnit startDate:&startDate interval:NULL forDate:self];
+    BOOL ok = [[NSCalendar currentCalendar] rangeOfUnit:NSCalendarUnitMonth startDate:&startDate interval:NULL forDate:self];
     NSAssert1(ok, @"Failed to calculate the first day of the month based on %@", self);
     return startDate;
 }
 
 - (NSUInteger)weeklyOrdinality
 {
-    return [[NSCalendar currentCalendar] ordinalityOfUnit:NSDayCalendarUnit inUnit:NSWeekCalendarUnit forDate:self];
+    return [[NSCalendar currentCalendar] ordinalityOfUnit:NSCalendarUnitDay inUnit:NSCalendarUnitWeekday forDate:self];
 }
 
 @end

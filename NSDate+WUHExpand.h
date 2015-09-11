@@ -8,54 +8,67 @@
 
 #import <Foundation/Foundation.h>
 
-
 #define YEAR @"year"
 #define MONTH @"month"
 #define DAY @"day"
 #define HOUR @"hour"
 #define MINUTE @"minute"
 #define SECOND @"second"
-#define WEAKDAY @"weakDay"
+#define WEEKDAY @"weekDay"
 
 #define BeginDate @"beginDate"
 #define EndDate @"endDate"
 
 @interface NSDate(Common)
 
+/** 
+ *  把date转换成相应格式的字符串,默认为 yyyy-MM-dd hh:mm:ss
+ */
 -(NSString*)dateByFormat:(NSString*)format;
 
 @end
 
+
 @interface NSDate(Calendar)
 
 /**
- * 把date转换成各单位信息(年、月、日等)
+ *  把date转换成各单位信息(年、月、日等)，eg:@{@"year":2015,@"month":9,@"datay":30}
  *
  *  @param unit 单位enum
  *
  *  @return key: year|month|day|hour|minute|second|weakDay
  */
--(NSDictionary*)transFormCalendarWithUnit:(NSCalendarUnit)unit;
+-(NSDictionary*)GetCalendarInfoWithUnit:(NSCalendarUnit)unit;
 
-/** 所有的unit */
+/** 
+ * 暂时支持的所有CanlendarUnit
+ */
 + (NSCalendarUnit)allCalendarUnit;
 
-/** 转换时间字符串为自1970年来的秒数 */
-+ (NSNumber*)transFormDateStringToDateFormSince1970:(NSString*)dateString;
-
-/** 把获的星期数值转换成字符串 */
+/**
+ * 把获的星期数值转换成字符串
+ */
 +(NSString*)transformWeakDayNumber:(NSNumber*)weakDayNum;
 
-/** 获取农历时间 year | month | day */
--(NSDictionary*)getChineseCalendarInfo;
+/**
+ * 获取农历时间 year | month | day
+ */
+-(NSDictionary*)GetChineseCalendarInfo;
 
-/** 获取date当前周的起始时间结束时间 format(格式@"MM.dd") beginDate | endDate */
+/**
+ * 获取date当前周的起始时间结束时间 format(格式@"MM.dd") beginDate | endDate
+ */
 -(NSDictionary *)getCurrentWeekBeginDayAndEndDayWithFormat:(NSString*)format;
-/** 获取date当时月的起始时间和结束时间  */
--(NSDictionary *)getCurrentMonthBeginDayANdEndDayWithFormat:(NSString*)format;
 
-/** 获取date当前月份的天数 */
--(NSInteger)getMonthOfDays;
+/**
+ * 获取date当时月的起始时间和结束时间
+ */
+-(NSDictionary *)getCurrentMonthBeginDayAndEndDayWithFormat:(NSString*)format;
+
+/**
+ * 获取date当前月份的天数
+ */
+-(NSInteger)GetMonthOfDays;
 
 /** 获取当前第一天 */
 -(NSDate*)firstDayOfCurrentMonth;
